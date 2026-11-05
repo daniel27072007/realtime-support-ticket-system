@@ -15,7 +15,7 @@ export default function Login() {
   
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4 text-white">
-      <div className="w-full max-w-md space-y-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 shadow-xl backdrop-blur-sm">
+      <div className="w-full max-w-md space-y-6 rounded-xl border border-white-800 bg-zinc-900/50 p-8 shadow-xl backdrop-blur-sm">
         
         <div className="space-y-2 text-center">
           <h1 className="text-3xl font-bold tracking-tight">Welcome Back</h1>

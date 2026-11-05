@@ -8,10 +8,10 @@ import TicketDetail from '../pages/TicketDetail';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
-// Criamos um componente de Layout simples para envelopar o cabeçalho e o rodapé nas páginas internas
+// Geral component that says to his children to be in a div with the header and footer components
 function AppLayout({ children }) {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-zinc-950 text-white">
       <Header />
       <main className="flex-1">{children}</main>
       <Footer />
@@ -23,16 +23,16 @@ export default function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Rotas Públicas (Sem Header e Footer) */}
+        {/* Public Routes*/}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Rotas Internas (Envelopadas com o AppLayout) */}
+        {/* Private Routes (With AppLayout)*/}
         <Route path="/client-dashboard" element={<AppLayout><ClientDashboard /></AppLayout>} />
         <Route path="/agent-dashboard" element={<AppLayout><AgentDashboard /></AppLayout>} />
         <Route path="/ticket/:id" element={<AppLayout><TicketDetail /></AppLayout>} />
 
-        {/* Rota de Fallback - Redireciona qualquer URL desconhecida para o login */}
+        {/* Fallback Route - any unknown url fall into this */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
