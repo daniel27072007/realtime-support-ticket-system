@@ -8,7 +8,7 @@ export default function Login() {
   const navigate = useNavigate()
 
   const onSubmitLogin = (event) => {
-    event.preventDefault
+    event.preventDefault()
     navigate('/client-dashboard')
   }
 
