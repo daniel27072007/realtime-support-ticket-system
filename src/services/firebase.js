@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { doc, getFirestore, serverTimestamp, setDoc } from "firebase/firestore";
+import { doc, getFirestore, serverTimestamp, setDoc, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -31,6 +31,26 @@ export async function registerUserFirestore(uid, username, email, role) {
     return { success: true };
   } catch (error) {
     console.error("Error when trying to save user in Firestore:", error);
+    throw error;
+  }
+}
+
+//function to log registered users at dashboard
+export async function loginUserFirestore(uid, email, password) {
+  
+}
+
+//function to search the role of the user by uid
+export async function getUserRole(uid) {
+  try {
+    const userRef = doc(db, "users", uid);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
+      return userSnap.data().role;
+    }
+    return "client";
+  } catch (error) {
+    console.error("Error fetching user role:", error);
     throw error;
   }
 }
