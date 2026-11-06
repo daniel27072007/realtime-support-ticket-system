@@ -14,6 +14,7 @@ export default function Register() {
     password: '',
     role: 'client'
   })
+  const [success, setSuccess] = useState(null)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
 
@@ -29,16 +30,20 @@ export default function Register() {
     event.preventDefault();
     setLoading(true)
     setError(null)
+    setSuccess(null)
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password)
       const user = userCredential.user
       await registerUserFirestore(user.uid, formData.username, user.email, formData.role);
-      if (formData.role === 'agent') {
-        navigate('/agent-dashboard');
-      } else {
-        navigate('/client-dashboard');
-      }
+      setSuccess('User registred. Redirecting to dashboard...')
+      setTimeout(() => {
+        if (formData.role === 'agent') {
+          navigate('/agent-dashboard');
+        } else {
+          navigate('/client-dashboard');
+        }
+      }, 2500)
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
         setError("This email is already in use.");
@@ -58,6 +63,7 @@ export default function Register() {
           <h1 className="text-3xl font-bold tracking-tight">Create an Account</h1>
           <p className="text-sm text-zinc-400">Get started with our realtime support ticket platform</p>
           {error && <p className="text-sm text-red-500 font-medium pt-2">{error}</p>}
+          {success && <p className="text-sm text-green-500 font-medium pt-2">{success}</p>}
         </div>
 
         <form className="space-y-4" onSubmit={onSubmitRegister}>
