@@ -47,7 +47,7 @@ export default function AgentDashboard() {
       {/* Grid de Métricas Rápidas */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <Card className="bg-zinc-900/30 border-zinc-800">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-medium text-zinc-400">Total Unassigned</CardTitle>
             <AlertCircle className="size-4 text-emerald-400" />
           </CardHeader>
@@ -58,7 +58,7 @@ export default function AgentDashboard() {
         </Card>
 
         <Card className="bg-zinc-900/30 border-zinc-800">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-medium text-zinc-400">Active Chats</CardTitle>
             <Clock className="size-4 text-amber-400" />
           </CardHeader>
@@ -69,7 +69,7 @@ export default function AgentDashboard() {
         </Card>
 
         <Card className="bg-zinc-900/30 border-zinc-800">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-medium text-zinc-400">Avg. Response Time</CardTitle>
             <Layers className="size-4 text-blue-400" />
           </CardHeader>
