@@ -18,18 +18,19 @@ export const auth = getAuth(app)
 export const db = getFirestore(app)
 
 // function to send registered users to firestore
-export async function registerUserFirestore(uid, email, role) {
+export async function registerUserFirestore(uid, username, email, role) {
   try{
     const userRef = doc(db, "users", uid)
     await setDoc(userRef, {
+      username: username,
       email: email,
       role: role, //must be "client" or "agent"
       createdAt: serverTimestamp()  
     })
-    console.log("Usuário salvo no Firestore com sucesso!");
+    console.log("User saved in Firestore with success");
     return { success: true };
   } catch (error) {
-    console.error("Erro ao salvar usuário no Firestore:", error);
+    console.error("Error when trying to save user in Firestore:", error);
     throw error;
   }
 }
