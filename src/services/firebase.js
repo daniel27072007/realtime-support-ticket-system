@@ -61,7 +61,7 @@ export async function subscribeClientTickets(clientId, callback){ // nao entendi
       })) 
       callback(tickets) //nao entendi
     })
-    return unsubscibe
+    return unsubscribe
   } catch (error) {
     console.error("Error when seaching client's tickets:", error);
     throw error;
