@@ -7,6 +7,7 @@ import AgentDashboard from '../pages/AgentDashboard';
 import TicketDetail from '../pages/TicketDetail';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { AuthProvider } from '#/context/AuthContext';
 
 // Geral component that says to his children to be in a div with the header and footer components
 function AppLayout({ children }) {
@@ -21,20 +22,22 @@ function AppLayout({ children }) {
 
 export default function AppRoutes() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Public Routes*/}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Public Routes*/}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        {/* Private Routes (With AppLayout)*/}
-        <Route path="/client-dashboard" element={<AppLayout><ClientDashboard /></AppLayout>} />
-        <Route path="/agent-dashboard" element={<AppLayout><AgentDashboard /></AppLayout>} />
-        <Route path="/ticket/:id" element={<AppLayout><TicketDetail /></AppLayout>} />
+          {/* Private Routes (With AppLayout)*/}
+          <Route path="/client-dashboard" element={<AppLayout><ClientDashboard /></AppLayout>} />
+          <Route path="/agent-dashboard" element={<AppLayout><AgentDashboard /></AppLayout>} />
+          <Route path="/ticket/:id" element={<AppLayout><TicketDetail /></AppLayout>} />
 
-        {/* Fallback Route - any unknown url fall into this */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
-    </BrowserRouter>
+          {/* Fallback Route - any unknown url fall into this */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
