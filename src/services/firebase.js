@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { doc, getFirestore, serverTimestamp, setDoc, getDoc, addDoc, collection } from "firebase/firestore";
+import { doc, getFirestore, serverTimestamp, setDoc, getDoc, addDoc, collection, query, where, onSnapshot } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -50,7 +50,36 @@ export async function getUserRole(uid) {
   }
 }
 
+//Function to listen in real time the tickets of certain user
+export async function subscribeClientTickets(clientId, callback){ // nao entendi callback
+  try {
+    const ticketsQuery = query(collection(db, "tickets"), where("clientId", "==", clientId))
+    const unsubscribe = onSnapshot(ticketsQuery, (snapshot) => { //nao entendi
+      const tickets = snapshot.docs.map(doc => ({ //nao entendi
+        id: doc.id, //nao entendi
+        ...doc.data() //nao entendi
+      })) 
+      callback(tickets) //nao entendi
+    })
+    return unsubscibe
+  } catch (error) {
+    console.error("Error when seaching client's tickets:", error);
+    throw error;
+  }
+}
+
+
 //this function creates the ticket
+//ticketData must be like this
+// {
+//   title:
+//   description:
+//   status: "open" "in-progress"
+//   priority: "low" "medium" "high" "crucial"
+//   clientId:
+//   clientName:
+//   agentId:
+// }
 export async function createTicket(ticketData) {
   try {
     const docRef = await addDoc(collection(db, "tickets"), {
@@ -66,6 +95,13 @@ export async function createTicket(ticketData) {
 }
 
 //this function sends the new messages in the subcollection. we need ticketId to know what room that message is from
+//messageData must be like this
+// {
+//   text:
+//   senderId:
+//   senderName:
+//   senderRole: "client" "agent"
+// }
 export async function sendMessages(ticketId, messageData) {
   try {
     const docRef = await addDoc(collection(db, "tickets", ticketId, "messages"), {
