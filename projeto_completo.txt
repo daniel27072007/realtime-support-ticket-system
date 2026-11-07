@@ -1,0 +1,1508 @@
+﻿=== ESTRUTURA DO PROJETO ===
+├── public
+│   ├── favicon.svg
+│   └── icons.svg
+├── src
+│   ├── components
+│   │   ├── ui
+│   │   │   ├── button.jsx
+│   │   │   ├── card.jsx
+│   │   │   └── input.jsx
+│   │   ├── Footer.jsx
+│   │   └── Header.jsx
+│   ├── context
+│   │   └── AuthContext.jsx
+│   ├── lib
+│   │   └── utils.js
+│   ├── pages
+│   │   ├── AgentDashboard.jsx
+│   │   ├── ClientDashboard.jsx
+│   │   ├── Login.jsx
+│   │   ├── Register.jsx
+│   │   └── TicketDetail.jsx
+│   ├── routes
+│   │   ├── index.jsx
+│   │   └── PrivateRoute.jsx
+│   ├── services
+│   │   └── firebase.js
+│   ├── App.jsx
+│   ├── index.css
+│   └── main.jsx
+├── .env.local
+├── .gitignore
+├── components.json
+├── eslint.config.js
+├── index.html
+├── jsconfig.json
+├── package.json
+├── README.md
+└── vite.config.js
+
+=== CONTEÚDO DOS ARQUIVOS ===
+
+--- ARQUIVO: .\.env.local ---
+VITE_FIREBASE_API_KEY="AIzaSyAvwpvRIZzjxzeTD8k3mu7CslGAnTqYGRs"
+VITE_FIREBASE_AUTH_DOMAIN="mirror-realtime-support-ticket.firebaseapp.com"
+VITE_FIREBASE_PROJECT_ID="mirror-realtime-support-ticket"
+VITE_FIREBASE_STORAGE_BUCKET="mirror-realtime-support-ticket.firebasestorage.app"
+VITE_FIREBASE_MESSAGING_SENDER_ID="189636875417"
+VITE_FIREBASE_APP_ID="1:189636875417:web:80363f7ce60ce9ac805408"
+VITE_FIREBASE_MEASUREMENT_ID="G-EXW36PXK2Q"
+------------------------------
+
+--- ARQUIVO: .\.gitignore ---
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+------------------------------
+
+--- ARQUIVO: .\components.json ---
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "base-nova",
+  "rsc": false,
+  "tsx": false,
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "src/index.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "#/components",
+    "utils": "#/lib/utils",
+    "ui": "#/components/ui",
+    "lib": "#/lib",
+    "hooks": "#/hooks"
+  },
+  "iconLibrary": "lucide",
+  "rtl": false,
+  "menuColor": "default",
+  "menuAccent": "subtle",
+  "registries": {}
+}
+
+------------------------------
+
+--- ARQUIVO: .\eslint.config.js ---
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import { defineConfig, globalIgnores } from 'eslint/config'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{js,jsx}'],
+    extends: [
+      js.configs.recommended,
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+    ],
+    languageOptions: {
+      globals: globals.browser,
+      parserOptions: { ecmaFeatures: { jsx: true } },
+    },
+  },
+])
+
+------------------------------
+
+--- ARQUIVO: .\index.html ---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Realtime Suport System</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+
+------------------------------
+
+--- ARQUIVO: .\jsconfig.json ---
+{
+  "compilerOptions": {
+    "paths": {
+      "#/*": ["./src/*"]
+    }
+  }
+}
+------------------------------
+
+--- ARQUIVO: .\package.json ---
+{
+  "name": "09---realtime-support-with-baas",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "imports": {
+    "#/*": "./src/*"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.9.0",
+    "@fontsource-variable/geist": "^5.3.0",
+    "@tailwindcss/vite": "^4.3.4",
+    "class-variance-authority": "^0.7.1",
+    "cn": "^0.5.2",
+    "firebase": "^13.2.0",
+    "lucide-react": "^1.68.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router-dom": "^7.18.5",
+    "shadcn": "^4.23.0",
+    "tailwindcss": "^4.3.4",
+    "tw-animate-css": "^1.4.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "eslint": "^10.13.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.7",
+    "globals": "^17.13.0",
+    "vite": "^8.3.5"
+  }
+}
+
+------------------------------
+
+--- ARQUIVO: .\README.md ---
+# realtime-support-ticket-system
+A full-stack MERN real-time support platform with bidirectional WebSockets, automated ticket status updates, and dynamic client/agent dashboards.
+
+------------------------------
+
+--- ARQUIVO: .\vite.config.js ---
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+import path from 'path'
+
+// https://vite.dev
+export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
+  resolve: {
+    alias: {
+      '#': path.resolve(import.meta.dirname, './src'),
+    },
+  },
+})
+------------------------------
+
+--- ARQUIVO: .\src\App.jsx ---
+import React from 'react';
+import AppRoutes from './routes';
+
+export default function App() {
+  return <AppRoutes />;
+}
+------------------------------
+
+--- ARQUIVO: .\src\index.css ---
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --font-heading: var(--font-sans);
+    --font-sans: 'Geist Variable', sans-serif;
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.708 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.205 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.205 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.922 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.556 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    }
+  body {
+    @apply bg-background text-foreground;
+    }
+  html {
+    @apply font-sans;
+    }
+}
+------------------------------
+
+--- ARQUIVO: .\src\main.jsx ---
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.jsx'
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
+
+------------------------------
+
+--- ARQUIVO: .\src\components\Footer.jsx ---
+import React from 'react';
+
+export default function Footer() {
+  return (
+    <footer className="w-full border-t border-white-800 bg-zinc-950 py-4 px-6 text-center text-xs text-zinc-500">
+      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+        <p>&copy; 2026 RealtimeSupport Platform. All rights reserved.</p>
+        <p className="text-zinc-600">Built for secure & fast helpdesk operations.</p>
+      </div>
+    </footer>
+  );
+}
+------------------------------
+
+--- ARQUIVO: .\src\components\Header.jsx ---
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '#/components/ui/button';
+import { LogOut, Ticket } from 'lucide-react';
+
+export default function Header() {
+  const navigate = useNavigate();
+
+  return (
+    <header className="w-full border-b border-white-800 bg-zinc-900/50 backdrop-blur-sm px-6 py-4 text-white">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        
+        {/* Lado Esquerdo: Logo e Nome */}
+        <div className="flex items-center gap-2">
+          <Ticket className="size-5 text-blue-500" />
+          <span className="font-bold tracking-tight text-lg">RealtimeSupport</span>
+        </div>
+
+        {/* Lado Direito: AÃ§Ãµes / Logout */}
+        <div className="flex items-center gap-4">
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate('/login')}
+            className="text-zinc-400 hover:text-white hover:bg-zinc-800 gap-2 text-sm"
+          >
+            <LogOut className="size-4" />
+            Sign Out
+          </Button>
+        </div>
+
+      </div>
+    </header>
+  );
+}
+------------------------------
+
+--- ARQUIVO: .\src\components\ui\button.jsx ---
+import { Button as ButtonPrimitive } from "@base-ui/react/button"
+import { cva } from "class-variance-authority";
+import { cn } from "cn"
+
+const buttonVariants = cva(
+  "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/80",
+        outline:
+          "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
+        ghost:
+          "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
+        destructive:
+          "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default:
+          "h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
+        xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+        lg: "h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
+        icon: "size-8",
+        "icon-xs":
+          "size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
+        "icon-sm":
+          "size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg",
+        "icon-lg": "size-9",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+)
+
+function Button({
+  className,
+  variant = "default",
+  size = "default",
+  ...props
+}) {
+  return (
+    <ButtonPrimitive
+      data-slot="button"
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  )
+}
+
+export { Button, buttonVariants }
+
+------------------------------
+
+--- ARQUIVO: .\src\components\ui\card.jsx ---
+import * as React from "react"
+import { cn } from "cn"
+
+function Card({
+  className,
+  size = "default",
+  ...props
+}) {
+  return (
+    <div
+      data-slot="card"
+      data-size={size}
+      className={cn(
+        "group/card flex flex-col pt-6 px-3 gap-(--card-spacing) overflow-hidden rounded-xl bg-zinc-900/40 text-sm text-white border border-zinc-800 shadow-sm [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl hover:border-white transition-all",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+function CardHeader({
+  className,
+  ...props
+}) {
+  return (
+    <div
+      data-slot="card-header"
+      className={cn(
+        "group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-(--card-spacing) bg-transparent has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing)",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+function CardTitle({
+  className,
+  ...props
+}) {
+  return (
+    <div
+      data-slot="card-title"
+      className={cn(
+        "font-heading text-base leading-snug font-bold text-white group-data-[size=sm]/card:text-sm",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+function CardDescription({
+  className,
+  ...props
+}) {
+  return (
+    <div
+      data-slot="card-description"
+      className={cn("text-sm text-zinc-400", className)}
+      {...props}
+    />
+  )
+}
+
+function CardAction({
+  className,
+  ...props
+}) {
+  return (
+    <div
+      data-slot="card-action"
+      className={cn(
+        "col-start-2 row-span-2 row-start-1 self-start justify-self-end",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+function CardContent({
+  className,
+  ...props
+}) {
+  return (
+    <div
+      data-slot="card-content"
+      className={cn("px-(--card-spacing) bg-transparent flex-1", className)}
+      {...props}
+    />
+  )
+}
+
+function CardFooter({
+  className,
+  ...props
+}) {
+  return (
+    <div
+      data-slot="card-footer"
+      className={cn(
+        "flex items-center rounded-b-xl border-t border-zinc-800/60 bg-zinc-900/20 p-(--card-spacing) text-zinc-500",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardAction,
+  CardDescription,
+  CardContent,
+}
+------------------------------
+
+--- ARQUIVO: .\src\components\ui\input.jsx ---
+import * as React from "react"
+import { Input as InputPrimitive } from "@base-ui/react/input"
+import { cn } from "cn"
+
+function Input({
+  className,
+  type,
+  ...props
+}) {
+  return (
+    <InputPrimitive
+      type={type}
+      data-slot="input"
+      className={cn(
+        "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+export { Input }
+
+------------------------------
+
+--- ARQUIVO: .\src\context\AuthContext.jsx ---
+import { createContext, useContext, useEffect, useState } from "react";
+import { auth, getUserRole } from '#/services/firebase'
+import { onAuthStateChanged } from "firebase/auth";
+
+const AuthContext = createContext({})
+
+export function AuthProvider({ children }){
+    const [currentUser, setCurrentUser] = useState(null)
+    const [role, setRole] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async(user) => {
+            if(user){
+                try {
+                    const userRole = await getUserRole(user.uid)
+                    setRole(userRole)
+                } catch (error) {
+                    console.error("Error when searching the user's role:", error)
+                    setRole("client")
+                }
+            } else {
+                setCurrentUser(null)
+                setRole(null)
+            }
+            setLoading(false)
+        })
+        return () => unsubscribe()
+    }, [])
+
+    return(
+        <AuthContext.Provider value={{currentUser, role, loading}}>
+            {children}
+        </AuthContext.Provider>
+    )
+}
+
+export const useAuth = () => useContext(AuthContext)
+------------------------------
+
+--- ARQUIVO: .\src\lib\utils.js ---
+export { cn } from "cn"
+
+------------------------------
+
+--- ARQUIVO: .\src\pages\AgentDashboard.jsx ---
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '#/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '#/components/ui/card';
+import { Layers, AlertCircle, Clock, CheckCircle2, ChevronRight } from 'lucide-react';
+
+export default function AgentDashboard() {
+  const navigate = useNavigate();
+
+  // Dados fictÃ­cios simulando a fila global de suporte que os tÃ©cnicos atendem
+  const globalTickets = [
+    {
+      id: 'ticket-101',
+      client: 'Daniel',
+      title: 'Database connection drop error',
+      priority: 'High',
+      status: 'In Progress',
+      time: '12m ago',
+    },
+    {
+      id: 'ticket-102',
+      client: 'Lucas Ricci',
+      title: 'Payment checkout screen freeze on mobile',
+      priority: 'Critical',
+      status: 'Open',
+      time: '4m ago',
+    },
+    {
+      id: 'ticket-104',
+      client: 'Amanda',
+      title: 'SaaS authentication token expiration bug',
+      priority: 'Medium',
+      status: 'Open',
+      time: '1h ago',
+    },
+  ];
+
+  return (
+    <div className="max-w-7xl mx-auto p-6 space-y-8">
+      
+      {/* Topo / TÃ­tulo */}
+      <div className="border-b border-zinc-800 pb-6">
+        <h1 className="text-3xl font-bold tracking-tight">Agent Helpdesk Queue</h1>
+        <p className="text-zinc-400 text-sm mt-1">Monitor, assign, and resolve incoming client support requests in real-time.</p>
+      </div>
+
+      {/* Grid de MÃ©tricas RÃ¡pidas */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <Card className="bg-zinc-900/30 border-zinc-800">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-sm font-medium text-zinc-400">Total Unassigned</CardTitle>
+            <AlertCircle className="size-4 text-emerald-400" />
+          </CardHeader>
+          <CardContent className="pb-6 px-6">
+            <div className="text-3xl font-bold">2</div>
+            <p className="text-xs text-zinc-500 mt-1">Tickets waiting for an agent</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-zinc-900/30 border-zinc-800">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-sm font-medium text-zinc-400">Active Chats</CardTitle>
+            <Clock className="size-4 text-amber-400" />
+          </CardHeader>
+          <CardContent className="pb-6 px-6">
+            <div className="text-3xl font-bold">1</div>
+            <p className="text-xs text-zinc-500 mt-1">Tickets being handled right now</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-zinc-900/30 border-zinc-800">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-sm font-medium text-zinc-400">Avg. Response Time</CardTitle>
+            <Layers className="size-4 text-blue-400" />
+          </CardHeader>
+          <CardContent className="pb-6 px-6">
+            <div className="text-3xl font-bold">4.2m</div>
+            <p className="text-xs text-zinc-500 mt-1">Bidirectional sync efficiency</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* SeÃ§Ã£o da Fila Global */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold tracking-tight">Active Support Tickets Fila</h2>
+        
+        <div className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/20">
+          <div className="divide-y divide-zinc-800">
+            {globalTickets.map((ticket) => (
+              <div 
+                key={ticket.id} 
+                className="flex flex-col sm:flex-row sm:items-center justify-between p-4 gap-4 hover:bg-zinc-900/40 transition-colors cursor-pointer group"
+                onClick={() => navigate(`/ticket/${ticket.id}`)}
+              >
+                
+                {/* InformaÃ§Ãµes da Esquerda: UsuÃ¡rio e TÃ­tulo */}
+                <div className="space-y-1.5 flex-1">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-semibold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded">
+                      {ticket.client}
+                    </span>
+                    <span className="text-xs text-zinc-500">{ticket.time}</span>
+                    
+                    <span className={`text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.2 rounded border ${
+                      ticket.priority === 'Critical' ? 'text-red-400 border-red-500/20 bg-red-500/5' :
+                      ticket.priority === 'High' ? 'text-amber-400 border-amber-500/20 bg-amber-500/5' :
+                      'text-zinc-400 border-zinc-700 bg-zinc-800/10'
+                    }`}>
+                      {ticket.priority}
+                    </span>
+                  </div>
+                  <h3 className="font-bold text-zinc-200 group-hover:text-blue-400 transition-colors">
+                    {ticket.title}
+                  </h3>
+                </div>
+
+                {/* InformaÃ§Ãµes da Direita: Status e AÃ§Ã£o */}
+                <div className="flex items-center justify-between sm:justify-end gap-6">
+                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+                    ticket.status === 'Open' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                    'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                  }`}>
+                    {ticket.status === 'Open' ? <AlertCircle className="size-3" /> : <Clock className="size-3" />}
+                    {ticket.status}
+                  </span>
+                  
+                  <ChevronRight className="size-5 text-zinc-600 group-hover:text-zinc-400 group-hover:translate-x-0.5 transition-all hidden sm:block" />
+                </div>
+
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  );
+}
+------------------------------
+
+--- ARQUIVO: .\src\pages\ClientDashboard.jsx ---
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '#/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '#/components/ui/card';
+import { PlusCircle, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
+
+export default function ClientDashboard() {
+  const navigate = useNavigate();
+
+  // Lista de tickets fictÃ­cios para popular o nosso esqueleto visual
+  const mockTickets = [
+    {
+      id: 'ticket-101',
+      title: 'Database connection drop error',
+      category: 'Backend',
+      status: 'In Progress',
+      date: 'Nov 05, 2026',
+    },
+    {
+      id: 'ticket-102',
+      title: 'Payment checkout screen freeze on mobile',
+      category: 'Frontend',
+      status: 'Open',
+      date: 'Nov 05, 2026',
+    },
+    {
+      id: 'ticket-103',
+      title: 'Firebase environment keys setup help',
+      category: 'DevOps',
+      status: 'Closed',
+      date: 'Nov 02, 2026',
+    },
+  ];
+
+  return (
+    <div className="max-w-7xl mx-auto p-6 space-y-8">
+      
+      {/* Topo do Painel */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-zinc-800 pb-6">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Your Support Tickets</h1>
+          <p className="text-zinc-400 text-sm mt-1">Create new requests or trace the progress of active ones in realtime.</p>
+        </div>
+        <Button className="bg-blue-600 hover:bg-blue-500 text-white font-medium h-10 gap-2 px-4 shadow-lg shadow-blue-600/10">
+          <PlusCircle className="size-4" />
+          Create New Ticket
+        </Button>
+      </div>
+
+      {/* Grid contendo a lista de chamados */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {mockTickets.map((ticket) => (
+          <Card 
+            key={ticket.id} 
+            className="transition-all cursor-pointer group"
+            onClick={() => navigate(`/ticket/${ticket.id}`)}
+          >
+            <CardHeader className="space-y-1 pb-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+                  {ticket.category}
+                </span>
+                
+                {/* Tag de status simulada baseada na condicional */}
+                <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+                  ticket.status === 'Open' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                  ticket.status === 'In Progress' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                  'bg-zinc-500/10 text-zinc-400 border-zinc-500/20'
+                }`}>
+                  {ticket.status === 'Open' && <AlertCircle className="size-3" />}
+                  {ticket.status === 'In Progress' && <Clock className="size-3" />}
+                  {ticket.status === 'Closed' && <CheckCircle2 className="size-3" />}
+                  {ticket.status}
+                </span>
+              </div>
+              
+              <CardTitle className="text-lg font-bold group-hover:text-white-400 transition-colors pt-1">
+                {ticket.title}
+              </CardTitle>
+            </CardHeader>
+
+            <CardContent>
+              <p className="text-sm text-zinc-400 line-clamp-2">
+                Click to open the chat timeline and discuss this issue directly with an active technical support agent.
+              </p>
+            </CardContent>
+
+            <CardFooter className="pt-4 text-xs text-zinc-500 flex justify-between items-center">
+              <span>ID: {ticket.id}</span>
+              <span>Updated {ticket.date}</span>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+
+    </div>
+  );
+}
+------------------------------
+
+--- ARQUIVO: .\src\pages\Login.jsx ---
+import React, { useState } from 'react';
+import { Button } from '#/components/ui/button';
+import { Input } from '#/components/ui/input';
+import { useNavigate } from 'react-router-dom';
+import { auth, getUserRole } from '#/services/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth'
+
+export default function Login() {
+
+  const navigate = useNavigate()
+
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null)
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (event) => {
+    const { id, value } = event.target;
+    setFormData((prev) => ({
+      ...prev,
+      [id]: value
+    }));
+  };
+
+  const onSubmitLogin = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setError(null);
+    setSuccess(null)
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      const user = userCredential.user;
+      const role = await getUserRole(user.uid);
+      setSuccess('User loged. Redirecting to dashboard...')
+      setTimeout(() => {
+        if (role === 'agent') {
+          navigate('/agent-dashboard');
+        } else {
+          navigate('/client-dashboard');
+        }
+      }, 2500)
+    } catch (error) {
+      console.error(error);
+      if (error.code === "auth/invalid-credential" || error.code === "auth/user-not-found" || error.code === "auth/wrong-password") {
+        setError("Email or Password are invalid.");
+      } else {
+        setError("Error while login the account. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  
+return (
+    <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4 text-white">
+      <div className="w-full max-w-md space-y-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 shadow-xl backdrop-blur-sm">
+        
+        <div className="space-y-2 text-center">
+          <h1 className="text-3xl font-bold tracking-tight">Welcome Back</h1>
+          <p className="text-sm text-zinc-400">Enter your credentials to access your support panel</p>
+          {error && <p className="text-sm text-red-500 font-medium pt-2">{error}</p>}
+          {success && <p className="text-sm text-green-500 font-medium pt-2">{success}</p>}
+        </div>
+
+        <form className="space-y-4" onSubmit={onSubmitLogin}>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-zinc-300" htmlFor="email">
+              Email address
+            </label>
+            <Input 
+              id="email" 
+              type="email" 
+              placeholder="name@example.com" 
+              className="bg-zinc-950 border-zinc-800" 
+              required 
+              value={formData.email}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-zinc-300" htmlFor="password">
+              Password
+            </label>
+            <Input 
+              id="password" 
+              type="password" 
+              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" 
+              className="bg-zinc-950 border-zinc-800 tracking-[0.4em]" 
+              required 
+              value={formData.password}
+              onChange={handleChange}
+            />
+          </div>
+
+          <Button 
+            type="submit" 
+            disabled={loading}
+            className="w-full bg-white text-zinc-950 hover:bg-zinc-200 font-semibold h-10 transition-colors"
+          >
+            {loading ? "A entrar..." : "Sign In"}
+          </Button>
+        </form>
+
+        <div className="text-center text-sm">
+          <span className="text-zinc-500">Don't have an account? </span>
+          <button 
+            onClick={() => navigate('/register')} 
+            className="font-medium text-white hover:underline underline-offset-4"
+          >
+            Create an account
+          </button>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+------------------------------
+
+--- ARQUIVO: .\src\pages\Register.jsx ---
+import React, { useState } from 'react';
+import { Button } from '#/components/ui/button';
+import { Input } from '#/components/ui/input';
+import { useNavigate } from 'react-router-dom';
+import { auth, registerUserFirestore } from '#/services/firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+
+export default function Register() {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    role: 'client'
+  })
+  const [success, setSuccess] = useState(null)
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
+
+  const handleChange = (event) => {
+    const { id, value } = event.target
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value
+    }))
+  }
+
+  const onSubmitRegister = async (event) => {
+    event.preventDefault();
+    setLoading(true)
+    setError(null)
+    setSuccess(null)
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password)
+      const user = userCredential.user
+      await registerUserFirestore(user.uid, formData.username, user.email, formData.role);
+      setSuccess('User registred. Redirecting to dashboard...')
+      setTimeout(() => {
+        if (formData.role === 'agent') {
+          navigate('/agent-dashboard');
+        } else {
+          navigate('/client-dashboard');
+        }
+      }, 2500)
+    } catch (error) {
+      if (error.code === "auth/email-already-in-use") {
+        setError("This email is already in use.");
+      } else {
+        setError("It happend a error when creating a account. Please try again.");
+      }
+    } finally {
+      setLoading(false)
+    }
+  };
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4 text-white">
+      <div className="w-full max-w-md space-y-6 rounded-xl border border-white-800 bg-zinc-900/50 p-8 shadow-xl backdrop-blur-sm">
+        
+        <div className="space-y-2 text-center">
+          <h1 className="text-3xl font-bold tracking-tight">Create an Account</h1>
+          <p className="text-sm text-zinc-400">Get started with our realtime support ticket platform</p>
+          {error && <p className="text-sm text-red-500 font-medium pt-2">{error}</p>}
+          {success && <p className="text-sm text-green-500 font-medium pt-2">{success}</p>}
+        </div>
+
+        <form className="space-y-4" onSubmit={onSubmitRegister}>
+          
+          {/* Input: Full Name */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-zinc-300" htmlFor="username">
+              Full Name
+            </label>
+            <Input 
+              id="username"
+              name="username"
+              type="text" 
+              placeholder="John Doe" 
+              className="bg-zinc-950 border-zinc-800" 
+              required 
+              value={formData.username}
+              onChange={handleChange} // Dispara a nossa funÃ§Ã£o geral
+            />
+          </div>
+
+          {/* Input: Email */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-zinc-300" htmlFor="email">
+              Email address
+            </label>
+            <Input 
+              id="email"
+              name="email"
+              type="email" 
+              placeholder="name@example.com" 
+              className="bg-zinc-950 border-zinc-800" 
+              required 
+              value={formData.email}
+              onChange={handleChange}
+            />
+          </div>
+
+          {/* Input: Password */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-zinc-300" htmlFor="password">
+              Password
+            </label>
+            <Input 
+              id="password"
+              name="password"
+              type="password" 
+              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" 
+              className="bg-zinc-950 border-zinc-800 tracking-[0.4em]" 
+              required 
+              value={formData.password}
+              onChange={handleChange}
+            />
+          </div>
+
+          {/* Input Select: Role */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-zinc-300" htmlFor="role">
+              Account Type
+            </label>
+            <select
+              id="role"
+              name="role"
+              className="w-full h-8 rounded-lg border border-zinc-800 bg-zinc-950 px-2 text-sm text-zinc-300 outline-none focus:border-blue-500 transition-colors"
+              value={formData.role}
+              onChange={handleChange}
+            >
+              <option value="client">Client (Needs Support)</option>
+              <option value="agent">Support Agent (Provides Support)</option>
+            </select>
+          </div>
+
+          <Button 
+            type="submit" 
+            disabled={loading}
+            className="w-full bg-white text-zinc-950 hover:bg-zinc-200 font-semibold h-10 transition-colors"
+          >
+            {loading ? "Registering..." : "Sign Up"}
+          </Button>
+        </form>
+
+        <div className="text-center text-sm">
+          <span className="text-zinc-500">Already have an account? </span>
+          <button 
+            onClick={() => navigate('/login')} 
+            className="font-medium text-white hover:underline underline-offset-4"
+          >
+            Sign In
+          </button>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+------------------------------
+
+--- ARQUIVO: .\src\pages\TicketDetail.jsx ---
+import React from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Button } from '#/components/ui/button';
+import { Input } from '#/components/ui/input';
+import { ArrowLeft, Send, Clock, User, Shield } from 'lucide-react';
+
+export default function TicketDetail() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  // Dados fictÃ­cios simulando as mensagens em tempo real daquele ticket especÃ­fico
+  const mockMessages = [
+    {
+      id: 'msg-1',
+      sender: 'client',
+      name: 'Daniel',
+      text: "Hi, I am experiencing a persistent connection drop on our main database cluster. It disconnects every 5 minutes.",
+      time: '05:20 PM',
+    },
+    {
+      id: 'msg-2',
+      sender: 'agent',
+      name: 'Support Agent',
+      text: "Hello Daniel, thank you for reaching out. I am analyzing the cluster infrastructure logs right now. Did you apply any new environment keys recently?",
+      time: '05:24 PM',
+    },
+    {
+      id: 'msg-3',
+      sender: 'client',
+      name: 'Daniel',
+      text: "No, the environment variables remain the same as last week. The issue started after the latest server migration patch.",
+      time: '05:26 PM',
+    },
+  ];
+
+  return (
+    <div className="max-w-4xl mx-auto p-4 md:p-6 h-[calc(100vh-140px)] flex flex-col">
+      
+      {/* 1. Topo: CabeÃ§alho com informaÃ§Ãµes do chamado */}
+      <div className="flex items-center justify-between border-b border-zinc-800 pb-4 mb-4 shrink-0">
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => navigate(-1)} 
+            className="text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg"
+          >
+            <ArrowLeft className="size-4" />
+          </Button>
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="text-xl font-bold tracking-tight text-zinc-100">Database connection drop error</h1>
+              <span className="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full font-medium inline-flex items-center gap-1">
+                <Clock className="size-2.5" />
+                In Progress
+              </span>
+            </div>
+            <p className="text-xs text-zinc-500 mt-0.5">ID: {id || 'ticket-101'} &bull; Opened by Daniel</p>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Centro: Ãrea de mensagens com rolagem e alinhamento flexbox */}
+      <div className="flex-1 overflow-y-auto space-y-4 pr-2 mb-4 scrollbar-thin scrollbar-thumb-zinc-800">
+        {mockMessages.map((msg) => {
+          const isAgent = msg.sender === 'agent';
+          return (
+            <div 
+              key={msg.id} 
+              className={`flex flex-col ${isAgent ? 'items-end' : 'items-start'}`}
+            >
+              {/* Nome do remetente e Ã­cone identificador */}
+              <div className="flex items-center gap-1.5 text-xs text-zinc-500 mb-1 px-1">
+                {isAgent ? (
+                  <>
+                    <span className="font-medium text-blue-400">{msg.name}</span>
+                    <Shield className="size-3 text-blue-400" />
+                  </>
+                ) : (
+                  <>
+                    <User className="size-3" />
+                    <span className="font-medium">{msg.name}</span>
+                  </>
+                )}
+              </div>
+
+              {/* BalÃ£o da mensagem */}
+              <div className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm shadow-md border ${
+                isAgent 
+                  ? 'bg-blue-600 text-white border-blue-500 rounded-tr-none' 
+                  : 'bg-zinc-900/60 text-zinc-200 border-zinc-800 rounded-tl-none'
+              }`}>
+                <p className="leading-relaxed whitespace-pre-wrap break-words">{msg.text}</p>
+                <span className="block text-[10px] mt-1.5 text-right opacity-60">
+                  {msg.time}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* 3. RodapÃ©: Caixa de texto de envio fixada abaixo */}
+      <form 
+        className="flex items-center gap-2 border-t border-zinc-800 pt-4 bg-zinc-950 shrink-0" 
+        onSubmit={(e) => e.preventDefault()}
+      >
+        <Input 
+          type="text" 
+          placeholder="Type your message in realtime..." 
+          className="bg-zinc-900/40 border-zinc-800 h-10 flex-1 px-4 placeholder-zinc-500 focus-visible:ring-blue-500/20 focus-visible:border-blue-500"
+        />
+        <Button 
+          type="submit" 
+          className="bg-blue-600 hover:bg-blue-500 text-white font-medium size-10 rounded-lg shrink-0 transition-colors shadow-md shadow-blue-600/10"
+        >
+          <Send className="size-4" />
+        </Button>
+      </form>
+
+    </div>
+  );
+}
+------------------------------
+
+--- ARQUIVO: .\src\routes\index.jsx ---
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Login from '../pages/Login';
+import Register from '../pages/Register';
+import ClientDashboard from '../pages/ClientDashboard';
+import AgentDashboard from '../pages/AgentDashboard';
+import TicketDetail from '../pages/TicketDetail';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import { AuthProvider } from '#/context/AuthContext';
+import PrivateRoute from '#/routes/PrivateRoute'
+
+// Geral component that says to his children to be in a div with the header and footer components
+function AppLayout({ children }) {
+  return (
+    <div className="flex flex-col min-h-screen bg-zinc-950 text-white">
+      <Header />
+      <main className="flex-1">{children}</main>
+      <Footer />
+    </div>
+  );
+}
+
+export default function AppRoutes() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Public Routes*/}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          {/* Private Routes (With AppLayout)*/}
+          <Route path="/client-dashboard" element={<PrivateRoute allowedRole="client"><AppLayout><ClientDashboard /></AppLayout></PrivateRoute>} />
+          <Route path="/agent-dashboard" element={<PrivateRoute allowedRole="agent"><AppLayout><AgentDashboard /></AppLayout></PrivateRoute>} />
+          <Route path="/ticket/:id" element={<PrivateRoute><AppLayout><TicketDetail /></AppLayout></PrivateRoute>} />
+
+          {/* Fallback Route - any unknown url fall into this */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  );
+}
+------------------------------
+
+--- ARQUIVO: .\src\routes\PrivateRoute.jsx ---
+import { Navigate } from "react-router-dom";
+import { useAuth } from "#/context/AuthContext";
+
+export default function PrivateRoute({ children, allowedRole }) {
+    const { currentUser, role, loading } = useAuth()
+    if(loading){
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
+                <p className="text-sm text-zinc-400 animate-pulse">Loading session...</p>
+            </div>
+        )
+    }
+    if(!currentUser){
+        return <Navigate to="/login" replace />
+    }
+    if(allowedRole && role !== allowedRole){
+        return <Navigate to={role === "agent" ? "/agent-dashboard" : "/client-dashboard"} replace />
+    }
+    return children
+}
+------------------------------
+
+--- ARQUIVO: .\src\services\firebase.js ---
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { doc, getFirestore, serverTimestamp, setDoc, getDoc, addDoc, collection } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+}
+
+const app = initializeApp(firebaseConfig)
+
+export const auth = getAuth(app)
+export const db = getFirestore(app)
+
+// function to send registered users to firestore
+export async function registerUserFirestore(uid, username, email, role) {
+  try{
+    const userRef = doc(db, "users", uid)
+    await setDoc(userRef, {
+      username: username,
+      email: email,
+      role: role, //must be "client" or "agent"
+      createdAt: serverTimestamp()  
+    })
+    console.log("User saved in Firestore with success");
+    return { success: true };
+  } catch (error) {
+    console.error("Error when trying to save user in Firestore:", error);
+    throw error;
+  }
+}
+
+//function to search the role of the user by uid
+export async function getUserRole(uid) {
+  try {
+    const userRef = doc(db, "users", uid);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
+      return userSnap.data().role;
+    }
+    return "client";
+  } catch (error) {
+    console.error("Error fetching user role:", error);
+    throw error;
+  }
+}
+
+//this function creates the ticket
+export async function createTicket(ticketData) {
+  try {
+    const docRef = await addDoc(collection(db, "tickets"), {
+      ...ticketData,
+      createdAt: serverTimestamp()
+    })
+    console.log("Ticket created with success.")
+    return { success: true, id: docRef.id}
+  } catch (error) {
+    console.error("Error creating the ticket:", error);
+    throw error;
+  }
+}
+
+//this function sends the new messages in the subcollection. we need ticketId to know what room that message is from
+export async function sendMessages(ticketId, messageData) {
+  try {
+    const docRef = await addDoc(collection(db, "tickets", ticketId, "messages"), {
+      ...messageData,
+      createdAt: serverTimestamp()
+    })
+    console.log("message sent with success.")
+    return { success: true, id: docRef.id }
+  } catch (error) {
+    console.error("Error sending the message:", error);
+    throw error;
+  }
+}
+------------------------------
