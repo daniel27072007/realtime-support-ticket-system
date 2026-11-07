@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { doc, getFirestore, serverTimestamp, setDoc, getDoc } from "firebase/firestore";
+import { doc, getFirestore, serverTimestamp, setDoc, getDoc, addDoc, collection } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -35,11 +35,6 @@ export async function registerUserFirestore(uid, username, email, role) {
   }
 }
 
-//function to log registered users at dashboard
-export async function loginUserFirestore(uid, email, password) {
-  
-}
-
 //function to search the role of the user by uid
 export async function getUserRole(uid) {
   try {
@@ -51,6 +46,36 @@ export async function getUserRole(uid) {
     return "client";
   } catch (error) {
     console.error("Error fetching user role:", error);
+    throw error;
+  }
+}
+
+//this function creates the ticket
+export async function createTicket(ticketData) {
+  try {
+    const docRef = await addDoc(collection(db, "tickets"), {
+      ...ticketData,
+      createdAt: serverTimestamp()
+    })
+    console.log("Ticket created with success.")
+    return { success: true, id: docRef.id}
+  } catch (error) {
+    console.error("Error creating the ticket:", error);
+    throw error;
+  }
+}
+
+//this function sends the new messages in the subcollection. we need ticketId to know what room that message is from
+export async function sendMessages(ticketId, messageData) {
+  try {
+    const docRef = await addDoc(collection(db, "tickets", ticketId, "messages"), {
+      ...messageData,
+      createdAt: serverTimestamp()
+    })
+    console.log("message sent with success.")
+    return { success: true, id: docRef.id }
+  } catch (error) {
+    console.error("Error sending the message:", error);
     throw error;
   }
 }
