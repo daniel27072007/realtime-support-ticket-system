@@ -8,6 +8,7 @@ import TicketDetail from '../pages/TicketDetail';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { AuthProvider } from '#/context/AuthContext';
+import PrivateRoute from '#/routes/PrivateRoute'
 
 // Geral component that says to his children to be in a div with the header and footer components
 function AppLayout({ children }) {
@@ -30,9 +31,9 @@ export default function AppRoutes() {
           <Route path="/register" element={<Register />} />
 
           {/* Private Routes (With AppLayout)*/}
-          <Route path="/client-dashboard" element={<AppLayout><ClientDashboard /></AppLayout>} />
-          <Route path="/agent-dashboard" element={<AppLayout><AgentDashboard /></AppLayout>} />
-          <Route path="/ticket/:id" element={<AppLayout><TicketDetail /></AppLayout>} />
+          <Route path="/client-dashboard" element={<PrivateRoute allowedRole="client"><AppLayout><ClientDashboard /></AppLayout></PrivateRoute>} />
+          <Route path="/agent-dashboard" element={<PrivateRoute allowedRole="agent"><AppLayout><AgentDashboard /></AppLayout></PrivateRoute>} />
+          <Route path="/ticket/:id" element={<PrivateRoute><AppLayout><TicketDetail /></AppLayout></PrivateRoute>} />
 
           {/* Fallback Route - any unknown url fall into this */}
           <Route path="*" element={<Navigate to="/login" replace />} />
