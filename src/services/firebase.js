@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { doc, getFirestore, serverTimestamp, setDoc, getDoc, addDoc, collection, query, where, onSnapshot } from "firebase/firestore";
+import { doc, getFirestore, serverTimestamp, setDoc, getDoc, addDoc, collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -53,7 +53,7 @@ export async function getUserRole(uid) {
 //Function to listen in real time the tickets of certain user
 export async function subscribeClientTickets(clientId, callback){ // nao entendi callback
   try {
-    const ticketsQuery = query(collection(db, "tickets"), where("clientId", "==", clientId))
+    const ticketsQuery = query(collection(db, "tickets"), where("clientId", "==", clientId), orderBy("createdAt", "desc"))
     const unsubscribe = onSnapshot(ticketsQuery, (snapshot) => { //nao entendi
       const tickets = snapshot.docs.map(doc => ({ //nao entendi
         id: doc.id, //nao entendi
@@ -75,7 +75,7 @@ export async function subscribeClientTickets(clientId, callback){ // nao entendi
 //   title:
 //   description:
 //   status: "open" "in-progress"
-//   priority: "low" "medium" "high" "crucial"
+//   priority: "Low" "Medium" "High" "Crucial"
 //   clientId:
 //   clientName:
 //   agentId:
