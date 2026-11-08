@@ -1,39 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '#/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '#/components/ui/card';
 import { Layers, AlertCircle, Clock, CheckCircle2, ChevronRight } from 'lucide-react';
+import { useAuth } from '#/context/AuthContext';
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { db } from '#/services/firebase';
 
 export default function AgentDashboard() {
   const navigate = useNavigate();
+  const { currentUser } = useAuth()
 
-  // Dados fictícios simulando a fila global de suporte que os técnicos atendem
-  const globalTickets = [
-    {
-      id: 'ticket-101',
-      client: 'Daniel',
-      title: 'Database connection drop error',
-      priority: 'High',
-      status: 'In Progress',
-      time: '12m ago',
-    },
-    {
-      id: 'ticket-102',
-      client: 'Lucas Ricci',
-      title: 'Payment checkout screen freeze on mobile',
-      priority: 'Critical',
-      status: 'Open',
-      time: '4m ago',
-    },
-    {
-      id: 'ticket-104',
-      client: 'Amanda',
-      title: 'SaaS authentication token expiration bug',
-      priority: 'Medium',
-      status: 'Open',
-      time: '1h ago',
-    },
-  ];
+  //part to read and put on the screen all the tickets
+  const [tickets, setTickets] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const queryTickets = query(collection(db, "tickets"), orderBy("createdAt", "asc"))
+    const unsubscribe = onSnapshot(queryTickets, (snapshot) => {
+      const ticketList = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }))
+      setTickets(ticketList)
+      setLoading(false)
+    }, (error) => {
+      console.error('Error when getting tickets:', error)
+      setLoading(false)
+    })
+
+    return () => unsubscribe()
+  }, [])
+
+  // funtcion to handle the ticket agent
+  const handleAssignTicket = async (ticketId) => {
+    try {
+      const ticketRef = doc(db, 'tickets', ticketId);
+      await updateDoc(ticketRef, {
+        status: 'in-progress',
+        agentId: currentUser.uid,
+        agentEmail: currentUser.email
+      });
+    } catch (error) {
+      console.error("Error when assining the ticket to an agent: ", error);
+    }
+  };
+
+  if(loading){
+    return <div className="p-8 text-center">Loading agent dashboard...</div>;
+  }
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-8">
@@ -86,7 +101,7 @@ export default function AgentDashboard() {
         
         <div className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/20">
           <div className="divide-y divide-zinc-800">
-            {globalTickets.map((ticket) => (
+            {tickets.map((ticket) => (
               <div 
                 key={ticket.id} 
                 className="flex flex-col sm:flex-row sm:items-center justify-between p-4 gap-4 hover:bg-zinc-900/40 transition-colors cursor-pointer group"
