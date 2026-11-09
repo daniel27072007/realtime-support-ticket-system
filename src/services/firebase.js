@@ -51,15 +51,15 @@ export async function getUserRole(uid) {
 }
 
 //Function to listen in real time the tickets of certain user
-export async function subscribeClientTickets(clientId, callback){ // nao entendi callback
+export async function subscribeClientTickets(clientId, callback){
   try {
     const ticketsQuery = query(collection(db, "tickets"), where("clientId", "==", clientId), orderBy("createdAt", "desc"))
-    const unsubscribe = onSnapshot(ticketsQuery, (snapshot) => { //nao entendi
-      const tickets = snapshot.docs.map(doc => ({ //nao entendi
-        id: doc.id, //nao entendi
-        ...doc.data() //nao entendi
+    const unsubscribe = onSnapshot(ticketsQuery, (snapshot) => {
+      const tickets = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
       })) 
-      callback(tickets) //nao entendi
+      callback(tickets)
     })
     return unsubscribe
   } catch (error) {
@@ -67,6 +67,31 @@ export async function subscribeClientTickets(clientId, callback){ // nao entendi
     throw error;
   }
 }
+
+//function that listen to a especific ticket showing his details/data
+export async function subscribeTickets(ticketId, callback) {
+  try {
+    const ticketRef = doc(db, "tickets", ticketId)
+    const unsubscribe = onSnapshot(ticketRef, (docSnap) => {
+      if(docSnap.exists()){
+        callback({
+          id: docSnap.id,
+          ...docSnap.data()
+        })
+      }
+      else{
+        console.error("Ticket not found.")
+      }
+    }, (error) => {
+      console.error("Error when listening to ticket details:", error);
+    })
+    return unsubscribe
+  } catch (error) {
+    console.error("Error setting up ticket subscription:", error);
+    throw error;
+  }
+}
+
 
 
 //this function creates the ticket
@@ -112,6 +137,26 @@ export async function sendMessages(ticketId, messageData) {
     return { success: true, id: docRef.id }
   } catch (error) {
     console.error("Error sending the message:", error);
+    throw error;
+  }
+}
+
+//function to listen to the messages of a certain doc tickets
+export async function subscribeTicketMessages(ticketId, callback) {
+  try {
+    const messagesQuery = query(collection(db, "tickets", ticketId, "messages"),orderBy("createdAt", "asc"))
+    const unsubscribe = onSnapshot(messagesQuery, (snapshot) => {
+      const messages = snapshot.docs.app(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }))
+      callback(messages)
+    }, (error) => {
+      console.error('Error when listening to ticket messages:', error)
+    })
+    return unsubscribe
+  } catch (error) {
+    console.error("Error setting up message subscription:", error);
     throw error;
   }
 }
