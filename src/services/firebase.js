@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { doc, getFirestore, serverTimestamp, setDoc, getDoc, addDoc, collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
+import { doc, getFirestore, serverTimestamp, setDoc, getDoc, addDoc, updateDoc, collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -71,6 +71,21 @@ export async function createTicket(ticketData) {
     return { success: true, id: docRef.id}
   } catch (error) {
     console.error("Error creating the ticket:", error);
+    throw error;
+  }
+}
+
+// function to update the status of a ticket
+export async function updateTicketStatus(ticketId, newStatus) {
+  try {
+    const ticketRef = doc(db, "tickets", ticketId);
+    await updateDoc(ticketRef, {
+      status: newStatus
+    });
+    console.log("Ticket status updated successfully.");
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating ticket status:", error);
     throw error;
   }
 }
