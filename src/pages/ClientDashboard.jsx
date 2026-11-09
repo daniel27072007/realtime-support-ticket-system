@@ -111,14 +111,18 @@ return (
                   </span>
                   
                   <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border ${
-                    ticket.status === 'Open' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
-                    ticket.status === 'In Progress' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                    ticket.status === 'Open' || ticket.status === 'open' 
+                      ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                    ticket.status === 'In Progress' || ticket.status === 'in-progress' 
+                      ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
                     'bg-zinc-500/10 text-zinc-400 border-zinc-500/20'
                   }`}>
-                    {ticket.status === 'Open' && <AlertCircle className="size-3" />}
-                    {ticket.status === 'In Progress' && <Clock className="size-3" />}
-                    {ticket.status === 'Closed' && <CheckCircle2 className="size-3" />}
-                    {ticket.status || 'Open'}
+                    {(ticket.status === 'Open' || ticket.status === 'open') && <AlertCircle className="size-3" />}
+                    {(ticket.status === 'In Progress' || ticket.status === 'in-progress') && <Clock className="size-3" />}
+                    {(ticket.status === 'Closed' || ticket.status === 'closed') && <CheckCircle2 className="size-3" />}
+                    
+                    {/* Padroniza o texto exibido visualmente */}
+                    {ticket.status === 'in-progress' ? 'In Progress' : (ticket.status || 'Open')}
                   </span>
                 </div>
                 
